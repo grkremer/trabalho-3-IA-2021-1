@@ -28,7 +28,21 @@ def step_gradient(theta_0, theta_1, data, alpha):
     :param alpha: float - taxa de aprendizado (a.k.a. tamanho do passo)
     :return: float,float - os novos valores de theta_0 e theta_1, respectivamente
     """
-    raise NotImplementedError  # substituir pelo seu codigo
+    x = data[:, 0]
+    y = data[:, 1]
+
+    line = theta_1 * x + theta_0
+
+    deriv_theta_0 = np.mean(2 * (line - y))
+    deriv_theta_1 = np.mean(2 * (line - y) * x)
+
+    step_theta_0 = alpha * deriv_theta_0
+    step_theta_1 = alpha * deriv_theta_1
+
+    new_theta_0 = theta_0 - step_theta_0
+    new_theta_1 = theta_1 - step_theta_1
+
+    return new_theta_0, new_theta_1
 
 
 def fit(data, theta_0, theta_1, alpha, num_iterations):
