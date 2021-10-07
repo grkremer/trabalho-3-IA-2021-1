@@ -9,7 +9,14 @@ def compute_mse(theta_0, theta_1, data):
     :param data: np.array - matriz com o conjunto de dados, x na coluna 0 e y na coluna 1
     :return: float - o erro quadratico medio
     """
-    raise NotImplementedError  # substituir pelo seu codigo
+    x = data[:, 0]
+    y = data[:, 1]
+
+    line = theta_1 * x + theta_0
+
+    mse = np.square(np.subtract(line, y)).mean()
+
+    return mse
 
 
 def step_gradient(theta_0, theta_1, data, alpha):
