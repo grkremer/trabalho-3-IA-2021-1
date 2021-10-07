@@ -1,5 +1,7 @@
 import random
 
+from numpy.core.numeric import Infinity
+
 def verifica_linha(x, individual):
     ataques = 0
     
@@ -76,7 +78,7 @@ def tournament(participants):
     :return:list melhor individuo da lista recebida
     """
     melhor_inividuo = participants[0]
-    melhor_conflitos = 10000
+    melhor_conflitos = Infinity
 
     for individuo in participants:
         conflitos = evaluate(individuo)
@@ -127,6 +129,26 @@ def mutate(individual, m):
     return individual
 
 
+def aleatorios(n):
+    individuos = [None]*n
+    for i in range(len(individuos)):
+        novo_individuo = [None]*8
+        for j in range(len(novo_individuo)):
+            novo_individuo[j] = random.randint(1,8)
+        individuos[i] = novo_individuo
+    return individuos
+
+def selecao(individuos, k):
+    random.shuffle(individuos)
+    melhor_individuo = tournament(individuos[:k])
+    individuos.remove(melhor_individuo)
+
+    random.shuffle(individuos)
+    segundo_melhor = tournament(individuos[:k-1])
+    individuos.append(melhor_individuo)
+
+    return melhor_individuo, segundo_melhor
+
 def run_ga(g, n, k, m, e):
     """
     Executa o algoritmo genético e retorna o indivíduo com o menor número de ataques entre rainhas
@@ -137,38 +159,31 @@ def run_ga(g, n, k, m, e):
     :param e:bool - se vai haver elitismo
     :return:list - melhor individuo encontrado
     """
-    #1 Gera n individuos
-    individuos = [None]*n
-    for i in range(len(individuos)):
-        novo_individuo = [None]*8
-        for j in range(len(novo_individuo)):
-            novo_individuo[j] = random.randint(1,8)
-        individuos[i] = novo_individuo
+    individuos = aleatorios(n)
+    for geracao in range(g):
+        novos_individuos = []
+        if e:         
+            melhor_individuo = tournament(individuos)
+            novos_individuos.append(melhor_individuo)
         
-    melhor_individuo = tournament(individuos)
-    for geração in range(g):
-        #1.1 Muta os n individuos
-        for i in range(len(individuos)-1):
-            individuos[i] = mutate(melhor_individuo, m)
-    
-        #2 Avalia os n individuos
-        #3 ordena com base na pontuação
-        melhor_individuo = tournament(individuos)
-        
-        # Se tem elitismo...
-        if e:
-            individuos.remove(melhor_individuo)
-            segundo_melhor = tournament(individuos)
+        while len(novos_individuos) < n:
+            melhor_individuo, segundo_melhor = selecao(individuos, k)
+
             index = random.randint(0, len(melhor_individuo)-1)
             melhor_individuo, segundo_melhor = crossover(melhor_individuo, segundo_melhor, index)
-            individuos.append(melhor_individuo)
-        print(evaluate(melhor_individuo))
+
+            melhor_individuo = mutate(melhor_individuo, m)
+            segundo_melhor = mutate(segundo_melhor, m)
+
+            novos_individuos.append(melhor_individuo)
+            novos_individuos.append(segundo_melhor)
+
+        individuos = novos_individuos
     
-    return melhor_individuo
+    return tournament(individuos)
 
 
 if __name__ == "__main__":
-    #melhor_individuo = run_ga(100, 40, 2, 0.3, True)
-    melhor_individuo = run_ga(3, 5, 2, 0.3, False)
+    melhor_individuo = run_ga(100, 40, 2, 0.3, True)
     print(melhor_individuo)
-    #print(evaluate(melhor_individuo))
+    print(evaluate(melhor_individuo))
