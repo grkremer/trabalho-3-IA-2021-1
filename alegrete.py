@@ -23,7 +23,7 @@ def step_gradient(theta_0, theta_1, data, alpha):
     """
     Executa uma atualização por descida do gradiente  e retorna os valores atualizados de theta_0 e theta_1.
     :param theta_0: float - intercepto da reta
-    :param theta_1: float -inclinacao da reta
+    :param theta_1: float - inclinacao da reta
     :param data: np.array - matriz com o conjunto de dados, x na coluna 0 e y na coluna 1
     :param alpha: float - taxa de aprendizado (a.k.a. tamanho do passo)
     :return: float,float - os novos valores de theta_0 e theta_1, respectivamente
@@ -60,4 +60,13 @@ def fit(data, theta_0, theta_1, alpha, num_iterations):
     :param num_iterations: int - numero de épocas/iterações para executar a descida de gradiente
     :return: list,list - uma lista com os theta_0 e outra com os theta_1 obtidos ao longo da execução
     """
-    raise NotImplementedError  # substituir pelo seu codigo
+    thetas_0 = []
+    thetas_1 = []
+
+    for i in range(num_iterations):
+        theta_0, theta_1 = step_gradient(theta_0, theta_1, data, alpha)
+        print(theta_0, theta_1)
+        thetas_0.append(theta_0)
+        thetas_1.append(theta_1)
+
+    return thetas_0, thetas_1
