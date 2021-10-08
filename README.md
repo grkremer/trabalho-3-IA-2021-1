@@ -13,10 +13,10 @@
 
 Valores dos parâmetros do algoritmo genético
 
-- g = 100
-- n = 40
-- k = 2
-- m = 0.3
+- g = 200
+- n = 30
+- k = 30
+- m = 0.75
 - e = True
 
 ---

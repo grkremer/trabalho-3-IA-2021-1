@@ -35,7 +35,7 @@ def verifica_diagonal(x, individual):
     # sentido / cima
     y = individual[x]+1
     xNovo = x+1
-    while (xNovo < len(individual) and y < len(individual)+1):
+    while (xNovo < len(individual) and y <= len(individual)):
         if individual[xNovo] == y:
             ataques +=1
         y += 1
@@ -44,7 +44,7 @@ def verifica_diagonal(x, individual):
     # sentido \ cima
     y = individual[x]+1
     xNovo = x-1
-    while (xNovo > 0 and y < len(individual)+1):
+    while (xNovo >= 0 and y <= len(individual)):
         if individual[xNovo] == y:
             ataques +=1
         y += 1
@@ -76,6 +76,9 @@ def evaluate(individual):
         total_ataques += verifica_linha(x, individual)
         total_ataques += verifica_diagonal(x, individual)
     
+    if total_ataques%2 != 0:
+        r = 1
+
     return total_ataques/2
 
 
@@ -206,13 +209,9 @@ def run_ga(g, n, k, m, e):
 
 
 if __name__ == "__main__":
-    melhor_individuo = run_ga(500, 30, 30, 0.5, True)
+    melhor_individuo = run_ga(200, 30, 30, 0.75, True)
     print(melhor_individuo)
     print(evaluate(melhor_individuo))
-
-    print(conflitos_grafico_max)
-    print(conflitos_grafico_min)
-
 
     plt.figure(figsize=(6, 2))
     plt.plot(geração_grafico,conflitos_grafico_min,geração_grafico, conflitos_grafico_max, geração_grafico,conflitos_grafico_med)
