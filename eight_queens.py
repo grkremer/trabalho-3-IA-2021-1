@@ -140,12 +140,11 @@ def aleatorios(n):
 
 def selecao(individuos, k):
     random.shuffle(individuos)
-    melhor_individuo = tournament(individuos[:k])
-    individuos.remove(melhor_individuo)
-
-    random.shuffle(individuos)
-    segundo_melhor = tournament(individuos[:k-1])
-    individuos.append(melhor_individuo)
+    k_individuos = individuos[:k]
+    melhor_individuo = tournament(k_individuos)
+    k_individuos.remove(melhor_individuo)
+    segundo_melhor = tournament(k_individuos)
+    k_individuos.append(melhor_individuo)
 
     return melhor_individuo, segundo_melhor
 
