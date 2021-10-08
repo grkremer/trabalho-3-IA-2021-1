@@ -2,6 +2,15 @@ import random
 
 from numpy.core.numeric import Infinity
 
+import numpy as np
+import matplotlib.pyplot as plt
+
+
+conflitos_grafico_min = []
+conflitos_grafico_med = []
+conflitos_grafico_max = []
+geração_grafico = []
+
 def verifica_linha(x, individual):
     ataques = 0
     
@@ -148,6 +157,9 @@ def selecao(individuos, k):
 
     return melhor_individuo, segundo_melhor
 
+def ordena(individuos):
+    return individuos.sort(key=evaluate)
+
 def run_ga(g, n, k, m, e):
     """
     Executa o algoritmo genético e retorna o indivíduo com o menor número de ataques entre rainhas
@@ -158,12 +170,23 @@ def run_ga(g, n, k, m, e):
     :param e:bool - se vai haver elitismo
     :return:list - melhor individuo encontrado
     """
+
     individuos = aleatorios(n)
+
     for geracao in range(g):
+        
+        geração_grafico.append(geracao)
+        #ordena(individuos)
+        conflitos_grafico_max.append(evaluate(individuos[0]))
+        conflitos_grafico_min.append(evaluate(individuos[-1]))
+        conflitos_grafico_med.append((evaluate(individuos[0])+evaluate(individuos[-1]))/2)
+
+
         novos_individuos = []
         if e:         
             melhor_individuo = tournament(individuos)
             novos_individuos.append(melhor_individuo)
+        
         
         while len(novos_individuos) < n:
             melhor_individuo, segundo_melhor = selecao(individuos, k)
@@ -183,6 +206,17 @@ def run_ga(g, n, k, m, e):
 
 
 if __name__ == "__main__":
-    melhor_individuo = run_ga(100, 40, 2, 0.3, True)
+    melhor_individuo = run_ga(500, 30, 30, 0.5, True)
     print(melhor_individuo)
     print(evaluate(melhor_individuo))
+
+    print(conflitos_grafico_max)
+    print(conflitos_grafico_min)
+
+
+    plt.figure(figsize=(6, 2))
+    plt.plot(geração_grafico,conflitos_grafico_min,geração_grafico, conflitos_grafico_max, geração_grafico,conflitos_grafico_med)
+    plt.xlabel('Numero de conflitos')
+    plt.ylabel('Geração')
+    plt.title('Numero de conflitos eight_queens')
+    plt.show()
