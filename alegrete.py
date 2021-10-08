@@ -14,7 +14,7 @@ def compute_mse(theta_0, theta_1, data):
 
     line = theta_1 * x + theta_0
 
-    mse = np.square(np.subtract(line, y)).mean()
+    mse = np.average(np.square(np.subtract(line, y)))
 
     return mse
 
@@ -33,8 +33,8 @@ def step_gradient(theta_0, theta_1, data, alpha):
 
     line = theta_1 * x + theta_0
 
-    deriv_theta_0 = np.mean(2 * (line - y))
-    deriv_theta_1 = np.mean(2 * (line - y) * x)
+    deriv_theta_0 = np.average(2*(line - y))
+    deriv_theta_1 = np.average(2*(line - y) * x)
 
     step_theta_0 = alpha * deriv_theta_0
     step_theta_1 = alpha * deriv_theta_1
@@ -65,7 +65,6 @@ def fit(data, theta_0, theta_1, alpha, num_iterations):
 
     for i in range(num_iterations):
         theta_0, theta_1 = step_gradient(theta_0, theta_1, data, alpha)
-        print(theta_0, theta_1)
         thetas_0.append(theta_0)
         thetas_1.append(theta_1)
 
